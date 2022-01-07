@@ -7,5 +7,6 @@ export const devAppConfig = {
     messagingSenderId: process.env.REACT_APP_FIREBASE_DEV_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_FIREBASE_DEV_APP_ID,
     measurementId: process.env.REACT_APP_FIREBASE_DEV_MEASUREMENT_ID,
-  }
+  },
+  emulatorUrl: process.env.REACT_APP_FIREBASE_DEV_EMULATOR_URL as string,
 };

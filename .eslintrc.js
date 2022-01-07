@@ -28,5 +28,6 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-inferrable-types': 'off',
   },
 };
