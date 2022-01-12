@@ -1,17 +1,34 @@
 import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { signUp, sendVerificationEmail } from '../../../api/auth';
 import { verifyEmail, verifyPassword } from '../../../utils/auth';
+import CircularProgress from '@mui/material/CircularProgress';
+import { AuthStates } from '../../../pages/AuthenticationPage';
 
-const SignUp: React.FC = () => {
+interface ISignUpPage {
+  setAuthState: Dispatch<SetStateAction<AuthStates>>;
+}
+
+const SignUpPage: React.FC<ISignUpPage> = (props) => {
+  const { setAuthState } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(email, password, confirmPassword);
-    // if (verifyEmail(email) && verifyPassword(password) && password === confirmPassword) {
-    // }
+    if (verifyEmail(email) && verifyPassword(password) && password === confirmPassword) {
+      setLoading(true);
+      signUp(email, password)
+        .then((user) =>
+          sendVerificationEmail(user.user).then(() => setAuthState(AuthStates.VERIFY_EMAIL)),
+        )
+        .catch(() => setError('Email already in use'))
+        .finally(() => setLoading(false));
+    }
   };
 
   return (
@@ -74,15 +91,25 @@ const SignUp: React.FC = () => {
           autoComplete="current-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          error={!!confirmPassword && !verifyPassword(confirmPassword)}
+          error={
+            (!!confirmPassword && !verifyPassword(confirmPassword)) ||
+            (!!confirmPassword && confirmPassword !== password)
+          }
           helperText={
             confirmPassword && !verifyPassword(confirmPassword)
               ? 'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+              : confirmPassword && confirmPassword !== password
+              ? 'Passwords don"t match'
               : ''
           }
         />
+        {error && (
+          <Typography variant="subtitle1" component="p">
+            {error}
+          </Typography>
+        )}
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Sign Up
+          {loading ? <CircularProgress /> : 'Sign Up'}
         </Button>
         <Grid container>
           <Grid item xs>
@@ -91,8 +118,8 @@ const SignUp: React.FC = () => {
             </Link>
           </Grid>
           <Grid item>
-            <Link href="#" variant="body2">
-              {'Dont have an account? Sign Up'}
+            <Link variant="body2" onClick={() => setAuthState(AuthStates.LOGIN)}>
+              {'Already have an account? Click to login'}
             </Link>
           </Grid>
         </Grid>
@@ -101,4 +128,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;

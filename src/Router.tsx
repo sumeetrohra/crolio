@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from './api/auth';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Header from './components/composite/Navigation/Header';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const AuthenticationPage = React.lazy(() => import('./pages/AuthenticationPage'));
@@ -18,21 +19,24 @@ const Router: React.FC = () => {
     // signUp('test1@test.com', 'Test@123');
   }, []);
 
-  const { loading, loggedIn, userUID } = useAuth();
+  const { loading, loggedIn, user } = useAuth();
 
-  console.log(loading, loggedIn, userUID);
+  const showOnboarding = !loggedIn || !user?.emailVerified;
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <BrowserRouter>
-        {loggedIn ? (
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-          </Switch>
-        ) : (
+        {showOnboarding ? (
           <Switch>
             <Route path="*" component={AuthenticationPage} />
           </Switch>
+        ) : (
+          <>
+            <Header />
+            <Switch>
+              <Route exact path="/" component={HomePage} />
+            </Switch>
+          </>
         )}
       </BrowserRouter>
     </React.Suspense>

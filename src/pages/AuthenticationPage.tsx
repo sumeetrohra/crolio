@@ -1,10 +1,34 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import SignUp from '../components/composite/AuthenticationFlowPages/SignUp';
+import SignUp from '../components/composite/AuthenticationFlowPages/SignUpPage';
+import LoginPage from '../components/composite/AuthenticationFlowPages/LoginPage';
+import VerifyEmailPage from '../components/composite/AuthenticationFlowPages/VerifyEmailPage';
 
-export default function SignInSide() {
+export enum AuthStates {
+  SIGN_UP = 'SIGN_UP',
+  LOGIN = 'LOGIN',
+  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+  VERIFY_EMAIL = 'VERIFY_EMAIL',
+}
+
+const AuthenticationPage = () => {
+  const [authState, setAuthState] = useState(AuthStates.LOGIN);
+
+  const getAuthComponent = () => {
+    switch (authState) {
+      case AuthStates.SIGN_UP:
+        return <SignUp setAuthState={setAuthState} />;
+
+      case AuthStates.LOGIN:
+        return <LoginPage setAuthState={setAuthState} />;
+
+      case AuthStates.VERIFY_EMAIL:
+        return <VerifyEmailPage />;
+    }
+  };
+
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
@@ -23,8 +47,10 @@ export default function SignInSide() {
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <SignUp />
+        {getAuthComponent()}
       </Grid>
     </Grid>
   );
-}
+};
+
+export default AuthenticationPage;

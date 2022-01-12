@@ -5,7 +5,9 @@ import {
   signOut as logout,
   // connectAuthEmulator,
   UserCredential,
+  User,
   onAuthStateChanged,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 // import { devAppConfig } from '../config/dev';
@@ -31,7 +33,7 @@ export const signOut = (): Promise<void> => {
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userUID, setUserUID] = useState('');
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const _auth = getAuth();
@@ -39,14 +41,18 @@ export const useAuth = () => {
       setLoading(true);
       if (user) {
         setLoggedIn(true);
-        setUserUID(user.uid);
+        setUser(user);
       } else {
         setLoggedIn(false);
-        setUserUID('');
+        setUser(null);
       }
       setLoading(false);
     });
   }, []);
 
-  return { loading, loggedIn, userUID };
+  return { loading, loggedIn, user };
+};
+
+export const sendVerificationEmail = (user: User): Promise<void> => {
+  return sendEmailVerification(user);
 };
