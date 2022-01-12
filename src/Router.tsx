@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useAuth } from './api/auth';
-import Container from './components/core/layout/Container';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
+const AuthenticationPage = React.lazy(() => import('./pages/AuthenticationPage'));
 
 const Router: React.FC = () => {
   // example usage of styled components
@@ -23,15 +23,19 @@ const Router: React.FC = () => {
   console.log(loading, loggedIn, userUID);
 
   return (
-    <Container>
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <BrowserRouter>
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <BrowserRouter>
+        {loggedIn ? (
           <Switch>
             <Route exact path="/" component={HomePage} />
           </Switch>
-        </BrowserRouter>
-      </React.Suspense>
-    </Container>
+        ) : (
+          <Switch>
+            <Route path="*" component={AuthenticationPage} />
+          </Switch>
+        )}
+      </BrowserRouter>
+    </React.Suspense>
   );
 };
 

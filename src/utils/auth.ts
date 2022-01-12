@@ -5,5 +5,6 @@ export const verifyEmail = (email: string): boolean => {
 };
 
 export const verifyPassword = (password: string): boolean => {
-  return true;
+  const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  return re.test(password);
 };
