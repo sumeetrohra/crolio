@@ -18,7 +18,6 @@ const LoginPage: React.FC<ILoginPage> = (props) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(email, password);
     if (verifyEmail(email) && verifyPassword(password)) {
       setLoading(true);
       login(email, password)

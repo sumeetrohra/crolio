@@ -19,12 +19,13 @@ const SignUpPage: React.FC<ISignUpPage> = (props) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(email, password, confirmPassword);
     if (verifyEmail(email) && verifyPassword(password) && password === confirmPassword) {
       setLoading(true);
       signUp(email, password)
         .then((user) =>
-          sendVerificationEmail(user.user).then(() => setAuthState(AuthStates.VERIFY_EMAIL)),
+          sendVerificationEmail(user.user).then(() => {
+            setAuthState(AuthStates.VERIFY_EMAIL);
+          }),
         )
         .catch(() => setError('Email already in use'))
         .finally(() => setLoading(false));

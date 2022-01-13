@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import SignUp from '../components/composite/AuthenticationFlowPages/SignUpPage';
 import LoginPage from '../components/composite/AuthenticationFlowPages/LoginPage';
 import VerifyEmailPage from '../components/composite/AuthenticationFlowPages/VerifyEmailPage';
+import useQuery from '../hooks/useQuery';
+import { EMAIL_VERIFICATION_MODE } from '../constants/auth';
+import { useAuth } from '../api/auth';
 
 export enum AuthStates {
   SIGN_UP = 'SIGN_UP',
   LOGIN = 'LOGIN',
   FORGOT_PASSWORD = 'FORGOT_PASSWORD',
   VERIFY_EMAIL = 'VERIFY_EMAIL',
+  INITIATE_KYC = 'INITIATE_KYC',
 }
 
 const AuthenticationPage = () => {
-  const [authState, setAuthState] = useState(AuthStates.LOGIN);
+  const [authState, setAuthState] = useState<AuthStates>(AuthStates.LOGIN);
+  const params = useQuery();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user && authState !== AuthStates.LOGIN && authState !== AuthStates.SIGN_UP) {
+      setAuthState(AuthStates.LOGIN);
+    } else if (
+      (params.mode === EMAIL_VERIFICATION_MODE && params.oobCode && user) ||
+      (user && !user.emailVerified)
+    ) {
+      setAuthState(AuthStates.VERIFY_EMAIL);
+    }
+  });
 
   const getAuthComponent = () => {
     switch (authState) {
@@ -25,7 +42,7 @@ const AuthenticationPage = () => {
         return <LoginPage setAuthState={setAuthState} />;
 
       case AuthStates.VERIFY_EMAIL:
-        return <VerifyEmailPage />;
+        return <VerifyEmailPage setAuthState={setAuthState} />;
     }
   };
 

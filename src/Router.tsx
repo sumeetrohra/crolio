@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAuth } from './api/auth';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './components/composite/Navigation/Header';
+import { CircularProgress } from '@mui/material';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const AuthenticationPage = React.lazy(() => import('./pages/AuthenticationPage'));
@@ -23,7 +24,9 @@ const Router: React.FC = () => {
 
   const showOnboarding = !loggedIn || !user?.emailVerified;
 
-  return (
+  return loading ? (
+    <CircularProgress />
+  ) : (
     <React.Suspense fallback={<div>Loading...</div>}>
       <BrowserRouter>
         {showOnboarding ? (

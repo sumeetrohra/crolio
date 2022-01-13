@@ -8,12 +8,17 @@ import {
   User,
   onAuthStateChanged,
   sendEmailVerification,
+  applyActionCode,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 // import { devAppConfig } from '../config/dev';
 // import { ENVIRONMENT_DEV } from '../constants/env';
 
 // const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
+
+export interface UserWithKYC extends User {
+  kyc?: boolean;
+}
 
 export const signUp = (email: string, password: string): Promise<UserCredential> => {
   const auth = getAuth();
@@ -31,9 +36,9 @@ export const signOut = (): Promise<void> => {
 };
 
 export const useAuth = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithKYC | null>(null);
 
   useEffect(() => {
     const _auth = getAuth();
@@ -53,6 +58,11 @@ export const useAuth = () => {
   return { loading, loggedIn, user };
 };
 
-export const sendVerificationEmail = (user: User): Promise<void> => {
+export const sendVerificationEmail = (user: UserWithKYC): Promise<void> => {
   return sendEmailVerification(user);
+};
+
+export const sendEmailVerificationCode = (code: string): Promise<void> => {
+  const auth = getAuth();
+  return applyActionCode(auth, code);
 };
