@@ -16,9 +16,7 @@ import { useEffect, useState } from 'react';
 
 // const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
 
-export interface UserWithKYC extends User {
-  kyc?: boolean;
-}
+export type UserDetails = User;
 
 export const signUp = (email: string, password: string): Promise<UserCredential> => {
   const auth = getAuth();
@@ -38,7 +36,7 @@ export const signOut = (): Promise<void> => {
 export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState<UserWithKYC | null>(null);
+  const [user, setUser] = useState<UserDetails | null>(null);
 
   useEffect(() => {
     const _auth = getAuth();
@@ -58,7 +56,7 @@ export const useAuth = () => {
   return { loading, loggedIn, user };
 };
 
-export const sendVerificationEmail = (user: UserWithKYC): Promise<void> => {
+export const sendVerificationEmail = (user: UserDetails): Promise<void> => {
   return sendEmailVerification(user);
 };
 

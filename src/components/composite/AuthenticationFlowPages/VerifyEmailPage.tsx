@@ -4,7 +4,7 @@ import {
   sendEmailVerificationCode,
   sendVerificationEmail,
   useAuth,
-  UserWithKYC,
+  UserDetails,
 } from '../../../api/auth';
 import { EMAIL_VERIFICATION_MODE } from '../../../constants/auth';
 import useQuery from '../../../hooks/useQuery';
@@ -20,6 +20,7 @@ const VerifyEmailPage: React.FC<IVerifyEmailPage> = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [resendBtnText, setResendBtnText] = useState('Resend verification email');
 
   useEffect(() => {
     if (params.mode === EMAIL_VERIFICATION_MODE && params.oobCode) {
@@ -60,12 +61,12 @@ const VerifyEmailPage: React.FC<IVerifyEmailPage> = () => {
           </Typography>
           <Button
             onClick={() =>
-              sendVerificationEmail(user as UserWithKYC)
-                .then(() => console.log('sent'))
-                .catch((err) => console.log(err))
+              sendVerificationEmail(user as UserDetails)
+                .then(() => setResendBtnText('Email sent'))
+                .catch(() => setResendBtnText('Something went wrong, please try again'))
             }
           >
-            Resend verification email
+            {resendBtnText}
           </Button>
         </>
       )}
