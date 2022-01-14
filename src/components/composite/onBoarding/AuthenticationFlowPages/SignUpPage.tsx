@@ -1,9 +1,9 @@
 import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { signUp, sendVerificationEmail } from '../../../api/auth';
-import { verifyEmail, verifyPassword } from '../../../utils/auth';
+import { signUp, sendVerificationEmail } from '../../../../api/auth';
+import { verifyEmail, verifyPassword } from '../../../../utils/auth';
 import CircularProgress from '@mui/material/CircularProgress';
-import { AuthStates } from '../../../pages/AuthenticationPage';
+import { AuthStates } from '../../../../pages/AuthenticationPage';
 
 interface ISignUpPage {
   setAuthState: Dispatch<SetStateAction<AuthStates>>;

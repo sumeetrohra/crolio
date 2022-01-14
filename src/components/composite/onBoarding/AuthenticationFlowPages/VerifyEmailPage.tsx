@@ -1,14 +1,15 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   sendEmailVerificationCode,
   sendVerificationEmail,
   useAuth,
   UserDetails,
-} from '../../../api/auth';
-import { EMAIL_VERIFICATION_MODE } from '../../../constants/auth';
-import useQuery from '../../../hooks/useQuery';
-import { AuthStates } from '../../../pages/AuthenticationPage';
+} from '../../../../api/auth';
+import { EMAIL_VERIFICATION_MODE } from '../../../../constants/auth';
+import useQuery from '../../../../hooks/useQuery';
+import { AuthStates } from '../../../../pages/AuthenticationPage';
 
 interface IVerifyEmailPage {
   setAuthState: Dispatch<SetStateAction<AuthStates>>;
@@ -17,6 +18,7 @@ interface IVerifyEmailPage {
 const VerifyEmailPage: React.FC<IVerifyEmailPage> = () => {
   const params = useQuery();
   const { user } = useAuth();
+  const history = useHistory();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,7 +29,7 @@ const VerifyEmailPage: React.FC<IVerifyEmailPage> = () => {
       setLoading(true);
       sendEmailVerificationCode(params.oobCode)
         .then((data) => {
-          console.log(data);
+          history.push('/');
           window.location.reload();
         })
         .catch(() => setError('Some error occurred'))

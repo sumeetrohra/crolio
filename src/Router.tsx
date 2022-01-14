@@ -6,6 +6,7 @@ import { CircularProgress } from '@mui/material';
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const AuthenticationPage = React.lazy(() => import('./pages/AuthenticationPage'));
+const KYCPage = React.lazy(() => import('./pages/KYCPage'));
 
 const Router: React.FC = () => {
   // example usage of styled components
@@ -22,16 +23,19 @@ const Router: React.FC = () => {
 
   const { loading, loggedIn, user } = useAuth();
 
-  const showOnboarding = !loggedIn || !user?.emailVerified;
+  const showAuthPage = !loggedIn || !user?.emailVerified;
+  const showKYCPage = true;
+
+  const showOnboarding = showAuthPage || showKYCPage;
 
   return loading ? (
     <CircularProgress />
   ) : (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<CircularProgress />}>
       <BrowserRouter>
         {showOnboarding ? (
           <Switch>
-            <Route path="*" component={AuthenticationPage} />
+            <Route path="*" component={showAuthPage ? AuthenticationPage : KYCPage} />
           </Switch>
         ) : (
           <>
