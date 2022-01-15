@@ -50,7 +50,17 @@ const LoginPage: React.FC<ILoginPage> = (props) => {
       <Typography component="h1" variant="h3">
         Login
       </Typography>
-      <Box component="form" noValidate onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        noValidate
+        onSubmit={handleSubmit}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          width: '100%',
+        }}
+      >
         <TextField
           margin="normal"
           required
