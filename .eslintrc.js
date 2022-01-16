@@ -29,7 +29,7 @@ module.exports = {
     ],
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
+    quotes: 'off',
     semi: ['error', 'always'],
     'react/prop-types': 0,
     '@typescript-eslint/no-empty-function': 0,
