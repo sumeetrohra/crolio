@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAuth } from './api/auth';
+import { signOut, useAuth } from './api/auth';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from './components/composite/Navigation/Header';
 import { CircularProgress } from '@mui/material';
