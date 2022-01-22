@@ -119,7 +119,7 @@ const SignUpPage: React.FC<ISignUpPage> = (props) => {
             {error}
           </Typography>
         )}
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        <Button type="submit" fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
           {loading ? <CircularProgress /> : 'Sign Up'}
         </Button>
         <Grid container>
