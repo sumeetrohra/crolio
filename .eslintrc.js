@@ -19,14 +19,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
-    indent: [
-      'error',
-      2,
-      {
-        SwitchCase: 1,
-        ignoredNodes: ['ConditionalExpression'],
-      },
-    ],
+    indent: 'off',
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
     'linebreak-style': ['error', 'unix'],
     quotes: 'off',

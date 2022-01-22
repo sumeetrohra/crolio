@@ -24,7 +24,7 @@ export enum UploadedKYCDocType {
   PASSPORT = "passport",
   VOTER_ID = "voterID",
   AADHAR = "aadhar",
-  PAN_CARD = "PAN_CARD",
+  PAN_CARD = "pan",
 }
 
 export interface IVerifyUploadedDocRequestData {
@@ -33,5 +33,7 @@ export interface IVerifyUploadedDocRequestData {
 }
 
 export interface IVerifyUploadedDocResponseData {
-  data: any;
+  data: {
+    success: boolean;
+  };
 }
