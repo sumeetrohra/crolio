@@ -1,8 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { UploadedDocFace, UploadedKYCDocType, _uploadURLs } from '../../../../types/kyc';
+import {
+  IVerifyUploadedDocResponseData,
+  UploadedDocFace,
+  UploadedKYCDocType,
+  _uploadURLs,
+} from '../../../../types/kyc';
 import Input from '@mui/material/Input';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
-import { uploadFile, verifyDoc, verifySelfie } from '../../../../api/kyc';
+import {
+  requestInstantKYCApproval,
+  uploadFile,
+  verifyDoc,
+  verifySelfie,
+} from '../../../../api/kyc';
 
 interface IKYCUploaderProps {
   uploadURLs: _uploadURLs;
@@ -34,7 +44,6 @@ const getHeaderText = (docType: DocumentType): string => {
       return `Please upload your Selfie. ${uploadInfo}`;
     }
   }
-  return '';
 };
 
 const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
@@ -48,10 +57,11 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
 
   const fileInputRef = useRef(null);
 
-  // TODO: complete this and add kycstatus in Router page to configure the flow
-  const requestKYCApproval = (): void => {
+  const requestKYCApproval = async (): Promise<IVerifyUploadedDocResponseData> => {
     setLoading(true);
+    const data = await requestInstantKYCApproval();
     setLoading(false);
+    return data;
   };
 
   const uploadAndVerifyDocument = async ({
@@ -73,6 +83,7 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
         uploadFileData = await uploadFile(uploadUrl, filesArr[0]);
       } catch (err) {
         setError('Could not upload file please try again');
+        setLoading(false);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (fileInputRef.current as any).value = '';
         return;

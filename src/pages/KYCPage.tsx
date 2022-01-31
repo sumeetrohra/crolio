@@ -17,15 +17,14 @@ const KYCPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [uploadURLs, setUploadURLs] = useState<_uploadURLs>({
     documentBack:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_back?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1642852410&Signature=GcutSRi9L0OZWfMH8tx%2FFSOeW7w%3D',
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_back?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=zQhx%2FwVxLRWIUtKtbnbWMfjyMQ0%3D',
     documentFront:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1642852410&Signature=aGgi%2BqjeKbqPh1BWUyc2tXILg5Y%3D',
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=Jg7SuBIBPZd%2BfKA1EV82hu3W4FA%3D',
     panCard:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_2_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1642852410&Signature=CIf8GPpgUmoIj0UhxTRy65%2Fd124%3D',
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_2_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=gZThprc6ufxUKX1C9bqVzhZAJsg%3D',
     selfie:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/selfie?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1642852410&Signature=AxPsE8rhFF9FqqYDCRnUe7po1uA%3D',
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/selfie?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=%2B7zwWD5bfs8nJBcEN4%2F5poZ%2FGqg%3D',
   });
-  console.log(uploadURLs);
 
   const fetchUser = () =>
     getUserDetails(user?.uid).then((data) => {

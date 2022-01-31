@@ -37,3 +37,6 @@ export interface IVerifyUploadedDocResponseData {
     success: boolean;
   };
 }
+
+export type IRequestInstantKYCApprovalResponseData =
+  IVerifyUploadedDocResponseData;

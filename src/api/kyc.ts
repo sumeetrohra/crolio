@@ -2,11 +2,12 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
   ICreateUserAccountRequestData,
   IInitiateKYCResponseData,
+  IRequestInstantKYCApprovalResponseData,
   IVerifyUploadedDocRequestData,
   IVerifyUploadedDocResponseData,
 } from '../types/kyc';
 
-import { ENVIRONMENT_DEV } from '../constants/env';
+// import { ENVIRONMENT_DEV } from '../constants/env';
 import axios from 'axios';
 
 // const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
@@ -26,16 +27,12 @@ export const initiateKYC = async (): Promise<IInitiateKYCResponseData> => {
   return initiateKYCFunction() as unknown as Promise<IInitiateKYCResponseData>;
 };
 
-export const uploadFile = (url: string, file: File): Promise<any> => {
-  return axios.put(
-    url,
-    { data: file },
-    {
-      headers: {
-        'Content-Type': 'image/jpeg',
-      },
+export const uploadFile = async (url: string, file: File): Promise<any> => {
+  return axios.put(url, file, {
+    headers: {
+      'Content-Type': file.type,
     },
-  );
+  });
 };
 
 export const verifyDoc = async (
@@ -47,9 +44,16 @@ export const verifyDoc = async (
   return verifyUploadedKYCDoc(payload) as unknown as Promise<IVerifyUploadedDocResponseData>;
 };
 
-export const verifySelfie = (): Promise<IVerifyUploadedDocResponseData> => {
+export const verifySelfie = async (): Promise<IVerifyUploadedDocResponseData> => {
   const functions = getFunctions();
   // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
   const verifyUploadedKYCSelfie = httpsCallable(functions, 'verifyUploadedKYCSelfie');
   return verifyUploadedKYCSelfie() as unknown as Promise<IVerifyUploadedDocResponseData>;
+};
+
+export const requestInstantKYCApproval = (): Promise<IRequestInstantKYCApprovalResponseData> => {
+  const functions = getFunctions();
+  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
+  const requestKYCApproval = httpsCallable(functions, 'requestKYCApproval');
+  return requestKYCApproval() as unknown as Promise<IRequestInstantKYCApprovalResponseData>;
 };
