@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mui/material';
+import { Grid, Paper, useTheme } from '@mui/material';
 import React from 'react';
 
 interface IOnBoardingLayoutProps {
@@ -7,13 +7,25 @@ interface IOnBoardingLayoutProps {
 
 const OnBoardingLayout: React.FC<IOnBoardingLayoutProps> = (props) => {
   const { children } = props;
+  const theme = useTheme();
+
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
+    <Grid
+      container
+      component="main"
+      sx={{
+        height: '100vh',
+        width: '100vw',
+        p: 8,
+        [theme.breakpoints.only('sm')]: { p: 4 },
+        [theme.breakpoints.only('xs')]: { p: 0 },
+      }}
+    >
       <Grid
         item
         xs={false}
-        sm={4}
-        md={7}
+        sm={false}
+        md={6}
         sx={{
           backgroundImage: 'url(https://source.unsplash.com/random)',
           backgroundRepeat: 'no-repeat',
@@ -23,7 +35,7 @@ const OnBoardingLayout: React.FC<IOnBoardingLayoutProps> = (props) => {
           backgroundPosition: 'center',
         }}
       />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
         {children}
       </Grid>
     </Grid>

@@ -4,15 +4,10 @@ import {
   UploadedDocFace,
   UploadedKYCDocType,
   _uploadURLs,
-} from '../../../../types/kyc';
+} from '../../../types/kyc';
 import Input from '@mui/material/Input';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
-import {
-  requestInstantKYCApproval,
-  uploadFile,
-  verifyDoc,
-  verifySelfie,
-} from '../../../../api/kyc';
+import { requestInstantKYCApproval, uploadFile, verifyDoc, verifySelfie } from '../../../api/kyc';
 
 interface IKYCUploaderProps {
   uploadURLs: _uploadURLs;

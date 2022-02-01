@@ -4,7 +4,6 @@ import {
   signInWithEmailAndPassword,
   signOut as logout,
   // connectAuthEmulator,
-  UserCredential,
   User,
   onAuthStateChanged,
   sendEmailVerification,
@@ -18,14 +17,16 @@ import { useEffect, useState } from 'react';
 
 export type UserDetails = User;
 
-export const signUp = (email: string, password: string): Promise<UserCredential> => {
+export const signUp = async (email: string, password: string): Promise<User> => {
   const auth = getAuth();
-  return createUserWithEmailAndPassword(auth, email, password);
+  const userCred = await createUserWithEmailAndPassword(auth, email, password);
+  return userCred.user;
 };
 
-export const login = (email: string, password: string): Promise<UserCredential> => {
+export const login = async (email: string, password: string): Promise<User> => {
   const auth = getAuth();
-  return signInWithEmailAndPassword(auth, email, password);
+  const userCred = await signInWithEmailAndPassword(auth, email, password);
+  return userCred.user;
 };
 
 export const signOut = (): Promise<void> => {

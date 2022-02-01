@@ -1,13 +1,13 @@
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../api/auth';
-import { createUserKYCDetails, initiateKYC } from '../api/kyc';
-import { getUserDetails } from '../api/user';
-import KYCDocsUploader from '../components/composite/onBoarding/KYCFlow/KYCDocsUploader';
-import OnBoardingLayout from '../components/composite/onBoarding/OnBoardingLayout';
-import { capitalize } from '../helpers/string';
-import { _uploadURLs } from '../types/kyc';
-import { verifyName } from '../utils/user';
+import { useAuth } from '../../api/auth';
+import { createUserKYCDetails, initiateKYC } from '../../api/kyc';
+import { getUserDetails } from '../../api/user';
+import KYCDocsUploader from './components/KYCDocsUploader';
+import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLayout';
+import { capitalize } from '../../helpers/string';
+import { _uploadURLs } from '../../types/kyc';
+import { verifyName } from '../../utils/user';
 
 const KYCPage: React.FC = () => {
   const { user } = useAuth();
