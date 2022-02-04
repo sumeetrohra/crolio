@@ -60,7 +60,7 @@ const Router: React.FC = () => {
   const { loading, loggedIn, user } = useAuth();
 
   const showAuthPage = !loggedIn || !user?.emailVerified;
-  const showKYCPage = false;
+  const showKYCPage = true;
 
   const showOnboarding = showAuthPage || showKYCPage;
 

@@ -11,8 +11,10 @@ export interface _uploadURLs {
 }
 
 export interface IInitiateKYCResponseData {
-  success: boolean;
-  data: _uploadURLs;
+  data: {
+    success: boolean;
+    data: _uploadURLs;
+  };
 }
 
 export enum UploadedDocFace {

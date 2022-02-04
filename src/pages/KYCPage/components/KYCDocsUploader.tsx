@@ -165,24 +165,32 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
         justifyContent: 'center',
       }}
     >
-      <Typography component="h6" variant="h6">
-        {getHeaderText(currentDocument)}
-      </Typography>
-      <Input
-        inputRef={fileInputRef}
-        type="file"
-        onChange={(e) => setFilesArr((e.target as HTMLInputElement).files)}
-        required
-      />
-      <Typography component="p">{error}</Typography>
-      <Button
-        disabled={!(filesArr && filesArr.length > 0) || loading}
-        type="submit"
-        fullWidth
-        variant="outlined"
-      >
-        {loading ? <CircularProgress /> : 'submit'}
-      </Button>
+      {uploadURLs ? (
+        <>
+          <Typography component="h6" variant="h6">
+            {getHeaderText(currentDocument)}
+          </Typography>
+          <Input
+            inputRef={fileInputRef}
+            type="file"
+            onChange={(e) => setFilesArr((e.target as HTMLInputElement).files)}
+            required
+          />
+          <Typography component="p">{error}</Typography>
+          <Button
+            disabled={!(filesArr && filesArr.length > 0) || loading}
+            type="submit"
+            fullWidth
+            variant="outlined"
+          >
+            {loading ? <CircularProgress /> : 'submit'}
+          </Button>
+        </>
+      ) : (
+        <>
+          <CircularProgress /> Loading KYC page
+        </>
+      )}
     </Box>
   );
 };

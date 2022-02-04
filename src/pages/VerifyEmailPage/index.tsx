@@ -1,9 +1,10 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { User } from 'firebase/auth';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useAuth } from '../../api/auth';
+import { sendEmailVerificationCode, sendVerificationEmail, useAuth } from '../../api/auth';
 import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLayout';
-import { VERIFY_EMAIL_URL } from '../../constants/auth';
+import { EMAIL_VERIFICATION_MODE, KYC_URL, VERIFY_EMAIL_URL } from '../../constants/auth';
 import useQuery from '../../hooks/useQuery';
 import { getAuthRedirectUrl } from '../../Router';
 // import {
@@ -31,23 +32,22 @@ const VerifyEmailPage: React.FC = () => {
     }
   }, [loading, loggedIn]);
 
-  // const [loading, setLoading] = useState(false);
+  const [emailVerificationLoading, setEmailVerificationLoading] = useState(false);
   const [error, setError] = useState('');
   const [resendBtnText, setResendBtnText] = useState('Resend verification email');
 
   useEffect(() => {
-    // if (params.mode === EMAIL_VERIFICATION_MODE && params.oobCode) {
-    //   setLoading(true);
-    //   sendEmailVerificationCode(params.oobCode)
-    //     .then(() => {
-    //       history.push('/');
-    //       window.location.reload();
-    //     })
-    //     .catch(() => setError('Some error occurred'))
-    //     .finally(() => {
-    //       setLoading(false);
-    //     });
-    // }
+    if (params.mode === EMAIL_VERIFICATION_MODE && params.oobCode) {
+      setEmailVerificationLoading(true);
+      sendEmailVerificationCode(params.oobCode)
+        .then(() => {
+          history.push(KYC_URL, { replace: true });
+        })
+        .catch(() => setError('Some error occurred'))
+        .finally(() => {
+          setEmailVerificationLoading(false);
+        });
+    }
   }, []);
 
   return (
@@ -73,15 +73,22 @@ const VerifyEmailPage: React.FC = () => {
             <Typography component="h1" variant="h3">
               {error ? error : 'Please check your email for verification link'}
             </Typography>
-            <Button
-              onClick={() => {
-                // sendVerificationEmail(user as UserDetails)
-                //   .then(() => setResendBtnText('Email sent'))
-                //   .catch(() => setResendBtnText('Something went wrong, please try again'))
-              }}
-            >
-              {resendBtnText}
-            </Button>
+            {emailVerificationLoading ? (
+              <>
+                <CircularProgress /> Verifying Email
+              </>
+            ) : (
+              <Button
+                onClick={() => {
+                  // TODO: update User interface
+                  sendVerificationEmail(user as User)
+                    .then(() => setResendBtnText('Email sent'))
+                    .catch(() => setResendBtnText('Something went wrong, please try again'));
+                }}
+              >
+                {resendBtnText}
+              </Button>
+            )}
           </>
         )}
       </Box>

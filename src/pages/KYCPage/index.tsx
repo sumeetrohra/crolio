@@ -8,23 +8,29 @@ import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLa
 import { capitalize } from '../../helpers/string';
 import { _uploadURLs } from '../../types/kyc';
 import { verifyName } from '../../utils/user';
+import { useHistory } from 'react-router-dom';
+import { getAuthRedirectUrl } from '../../Router';
+import { KYC_URL } from '../../constants/auth';
 
 const KYCPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loggedIn, loading } = useAuth();
+
+  const history = useHistory();
+
+  // If the user is logged out, it redirects back to the login page
+  useEffect(() => {
+    if (!loading) {
+      const nextUrl = getAuthRedirectUrl(user);
+      if (nextUrl !== KYC_URL) {
+        history.push(nextUrl, { replace: true });
+      }
+    }
+  }, [loading, loggedIn]);
 
   // TODO: Sumeet set user type
   const [userDetails, setUserDetails] = useState<any>();
-  const [loading, setLoading] = useState(false);
-  const [uploadURLs, setUploadURLs] = useState<_uploadURLs>({
-    documentBack:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_back?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=zQhx%2FwVxLRWIUtKtbnbWMfjyMQ0%3D',
-    documentFront:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=Jg7SuBIBPZd%2BfKA1EV82hu3W4FA%3D',
-    panCard:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/identity_2_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=gZThprc6ufxUKX1C9bqVzhZAJsg%3D',
-    selfie:
-      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/61e67cf61ed8f4001cfb0fcd/selfie?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1643626982&Signature=%2B7zwWD5bfs8nJBcEN4%2F5poZ%2FGqg%3D',
-  });
+  const [loadingNameUpload, setLoadingNameUpload] = useState(false);
+  const [uploadURLs, setUploadURLs] = useState<_uploadURLs>();
 
   const fetchUser = () =>
     getUserDetails(user?.uid).then((data) => {
@@ -37,7 +43,7 @@ const KYCPage: React.FC = () => {
 
   useEffect(() => {
     if (userDetails) {
-      // initiateKYC().then((res) => setUploadURLs(res.data));
+      initiateKYC().then((res) => setUploadURLs(res.data.data));
     }
   }, [userDetails]);
 
@@ -46,14 +52,14 @@ const KYCPage: React.FC = () => {
 
   const handleNameSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
+    setLoadingNameUpload(true);
     createUserKYCDetails({
       firstName: capitalize(firstName).trim(),
       lastName: capitalize(lastName).trim(),
     })
       .then((data) => console.log(data))
       .then(fetchUser)
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingNameUpload(false));
   };
 
   const userNameForm = (
@@ -101,7 +107,7 @@ const KYCPage: React.FC = () => {
         helperText={lastName && !verifyName(lastName.trim()) ? 'Invalid Name' : ''}
       />
       <Button type="submit" fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
-        {loading ? <CircularProgress /> : 'Confirm'}
+        {loadingNameUpload ? <CircularProgress /> : 'Confirm'}
       </Button>
     </Box>
   );

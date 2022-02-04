@@ -34,8 +34,11 @@ const OnBoardingLayout: React.FC<IOnBoardingLayoutProps> = (props) => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
+        elevation={6}
+        component={Paper}
+        square
       />
-      <Grid item xs={12} sm={12} md={6} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={12} md={6} elevation={6} component={Paper} square>
         {children}
       </Grid>
     </Grid>
