@@ -1,10 +1,15 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { User } from 'firebase/auth';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { sendEmailVerificationCode, sendVerificationEmail, useAuth } from '../../api/auth';
 import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLayout';
-import { EMAIL_VERIFICATION_MODE, KYC_URL, VERIFY_EMAIL_URL } from '../../constants/auth';
+import {
+  EMAIL_VERIFICATION_MODE,
+  KYC_URL,
+  LOGIN_URL,
+  VERIFY_EMAIL_URL,
+} from '../../constants/auth';
 import useQuery from '../../hooks/useQuery';
 import { getAuthRedirectUrl } from '../../Router';
 // import {
@@ -24,11 +29,10 @@ const VerifyEmailPage: React.FC = () => {
 
   // If the user is logged out, it redirects back to the login page
   useEffect(() => {
-    if (!loading) {
-      const nextUrl = getAuthRedirectUrl(user);
-      if (nextUrl !== VERIFY_EMAIL_URL) {
-        history.push(nextUrl, { replace: true });
-      }
+    if (!loading && !user) {
+      history.push(LOGIN_URL, { replace: true });
+    } else if (user?.emailVerified) {
+      history.push(KYC_URL, { replace: true });
     }
   }, [loading, loggedIn]);
 

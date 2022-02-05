@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { signOut, useAuth } from './api/auth';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { useAuth } from './api/auth';
+import { BrowserRouter, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import Header from './components/composite/Navigation/Header';
 import { CircularProgress } from '@mui/material';
 import {
+  EMAIL_VERIFICATION_MODE,
   FORGOT_PASSWORD_URL,
   KYC_URL,
   LOGIN_URL,
+  RESET_PASSWORD_MODE,
   SIGN_UP_URL,
   VERIFY_EMAIL_URL,
 } from './constants/auth';
@@ -29,9 +31,20 @@ const onBoardingRoutes = [
 
 // TODO: add user type
 export const getAuthRedirectUrl = (user: any) => {
+  const params = new URLSearchParams(window.location.search);
+
+  const oob = params.get('oobCode');
+  const mode = params.get('mode');
+
+  if (mode === EMAIL_VERIFICATION_MODE) {
+    return VERIFY_EMAIL_URL + `?mode=${mode}&oobCode=${oob}`;
+  } else if (mode === RESET_PASSWORD_MODE) {
+    return FORGOT_PASSWORD_URL + `?mode=${mode}&oobCode=${oob}`;
+  }
   if (!user) {
     return LOGIN_URL;
   }
+
   if (!user.emailVerified) {
     return VERIFY_EMAIL_URL;
   }
@@ -48,7 +61,10 @@ const Router: React.FC = () => {
   //   background-color: ${theme.palette.primary.dark};
   // `;
 
+  const history = useHistory();
+
   useEffect(() => {
+    console.log(history);
     // signOut();
     // login('test1@test.com', 'Test@123');
     // signUp('test1@test.com', 'Test@123');

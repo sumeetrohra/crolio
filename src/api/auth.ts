@@ -8,6 +8,8 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   applyActionCode,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 // import { devAppConfig } from '../config/dev';
@@ -64,4 +66,16 @@ export const sendVerificationEmail = (user: UserDetails): Promise<void> => {
 export const sendEmailVerificationCode = (code: string): Promise<void> => {
   const auth = getAuth();
   return applyActionCode(auth, code);
+};
+
+export const sendPasswordResetLink = (email: string): Promise<void> => {
+  const auth = getAuth();
+
+  return sendPasswordResetEmail(auth, email);
+};
+
+export const resetPassword = (oobCode: string, newPassword: string): Promise<void> => {
+  const auth = getAuth();
+
+  return confirmPasswordReset(auth, oobCode, newPassword);
 };

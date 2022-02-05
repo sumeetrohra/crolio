@@ -1,4 +1,5 @@
 export const EMAIL_VERIFICATION_MODE = 'verifyEmail';
+export const RESET_PASSWORD_MODE = 'resetPassword';
 
 export const LOGIN_URL = '/_/onboarding/login';
 export const SIGN_UP_URL = '/_/onboarding/sign_up';
