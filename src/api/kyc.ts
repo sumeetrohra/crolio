@@ -1,4 +1,4 @@
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
   ICreateUserAccountRequestData,
   IInitiateKYCResponseData,
@@ -7,14 +7,14 @@ import {
   IVerifyUploadedDocResponseData,
 } from '../types/kyc';
 
-import { ENVIRONMENT_DEV } from '../constants/env';
+// import { ENVIRONMENT_DEV } from '../constants/env';
 import axios from 'axios';
 
-const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
+// const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
 
 export const createUserKYCDetails = (data: ICreateUserAccountRequestData) => {
   const functions = getFunctions();
-  isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
+  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
   const createUserAccount = httpsCallable(functions, 'createUserAccount');
   // TODO: this is incorrect interface correct it
   return createUserAccount(data) as unknown as Promise<ICreateUserAccountRequestData>;
@@ -22,7 +22,7 @@ export const createUserKYCDetails = (data: ICreateUserAccountRequestData) => {
 
 export const initiateKYC = async (): Promise<IInitiateKYCResponseData> => {
   const functions = getFunctions();
-  isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
+  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
   const initiateKYCFunction = httpsCallable(functions, 'initiateKYC');
   return initiateKYCFunction() as unknown as Promise<IInitiateKYCResponseData>;
 };

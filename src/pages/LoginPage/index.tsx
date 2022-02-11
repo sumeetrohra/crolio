@@ -22,12 +22,17 @@ const LoginPage: React.FC = () => {
       setLoading(true);
       login(email, password)
         .then((user) => {
-          const nextUrl = getAuthRedirectUrl(user);
-          if (nextUrl) {
-            history.push(nextUrl);
-          } else {
-            history.push(HOME_URL, { replace: true });
-          }
+          user.getIdTokenResult(true).then((data) => {
+            const nextUrl = getAuthRedirectUrl(
+              user,
+              (data.claims as unknown as { isKYCDone: boolean }).isKYCDone,
+            );
+            if (nextUrl) {
+              history.push(nextUrl);
+            } else {
+              history.push(HOME_URL, { replace: true });
+            }
+          });
         })
         .catch((err) => {
           setError('Email or password incorrect');

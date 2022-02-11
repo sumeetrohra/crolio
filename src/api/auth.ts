@@ -10,6 +10,8 @@ import {
   applyActionCode,
   sendPasswordResetEmail,
   confirmPasswordReset,
+  IdTokenResult,
+  ParsedToken,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 // import { devAppConfig } from '../config/dev';
@@ -40,14 +42,17 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState<UserDetails | null>(null);
+  const [isKYCDone, setIsKYCDone] = useState<boolean>(false);
 
   useEffect(() => {
     const _auth = getAuth();
-    onAuthStateChanged(_auth, (user) => {
+    onAuthStateChanged(_auth, async (user) => {
       setLoading(true);
       if (user) {
         setLoggedIn(true);
         setUser(user);
+        const claims = await getCustomClaims();
+        setIsKYCDone((claims as unknown as ParsedToken).isKYCDone as unknown as boolean);
       } else {
         setLoggedIn(false);
         setUser(null);
@@ -56,7 +61,7 @@ export const useAuth = () => {
     });
   }, []);
 
-  return { loading, loggedIn, user };
+  return { loading, loggedIn, user, isKYCDone };
 };
 
 export const sendVerificationEmail = (user: UserDetails): Promise<void> => {
@@ -78,4 +83,10 @@ export const resetPassword = (oobCode: string, newPassword: string): Promise<voi
   const auth = getAuth();
 
   return confirmPasswordReset(auth, oobCode, newPassword);
+};
+
+export const getCustomClaims = (): Promise<IdTokenResult | ParsedToken> | undefined => {
+  const auth = getAuth();
+
+  return auth.currentUser?.getIdTokenResult(true).then((res) => res.claims);
 };

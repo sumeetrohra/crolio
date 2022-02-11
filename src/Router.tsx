@@ -30,7 +30,7 @@ const onBoardingRoutes = [
 ];
 
 // TODO: add user type
-export const getAuthRedirectUrl = (user: any) => {
+export const getAuthRedirectUrl = (user: any, isKYCDone: boolean) => {
   const params = new URLSearchParams(window.location.search);
 
   const oobCode = params.get('oobCode');
@@ -47,7 +47,7 @@ export const getAuthRedirectUrl = (user: any) => {
     return VERIFY_EMAIL_URL + `?mode=${mode}&oobCode=${oobCode}`;
   } else if (!user.emailVerified) {
     return VERIFY_EMAIL_URL;
-  } else if (!user.isKYCDone) {
+  } else if (!isKYCDone) {
     return KYC_URL;
   }
   return '';
@@ -60,22 +60,16 @@ const Router: React.FC = () => {
   //   background-color: ${theme.palette.primary.dark};
   // `;
 
-  useEffect(() => {
-    // signOut();
-    // login('test1@test.com', 'Test@123');
-    // signUp('test1@test.com', 'Test@123');
-    // if (!user) {
-    //   history.push('/_/onboarding/login', { replace: true });
-    // }
-  }, []);
+  // useEffect(() => {
+  //   signOut();
+  // }, []);
 
-  const { loading, loggedIn, user } = useAuth();
+  const { loading, loggedIn, user, isKYCDone } = useAuth();
 
   const showAuthPage = !loggedIn || !user?.emailVerified;
-  const showKYCPage = true;
+  const showKYCPage = !isKYCDone;
 
   const showOnboarding = showAuthPage || showKYCPage;
-  console.log(getAuthRedirectUrl(user));
 
   return loading ? (
     <CircularProgress />
@@ -87,7 +81,7 @@ const Router: React.FC = () => {
             {onBoardingRoutes.map((route) => (
               <Route key={route.path} exact path={route.path} component={route.component} />
             ))}
-            <Route path="*" render={() => <Redirect to={getAuthRedirectUrl(user)} />} />
+            <Route path="*" render={() => <Redirect to={getAuthRedirectUrl(user, isKYCDone)} />} />
           </Switch>
         ) : (
           <>

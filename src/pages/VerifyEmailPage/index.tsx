@@ -15,7 +15,7 @@ const VerifyEmailPage: React.FC = () => {
 
   // If the user is logged out, it redirects back to the login page
   useEffect(() => {
-    const redirectUrl = getAuthRedirectUrl(user);
+    const redirectUrl = getAuthRedirectUrl(user, false);
     if (
       redirectUrl !== VERIFY_EMAIL_URL &&
       history.location.pathname !== VERIFY_EMAIL_URL &&

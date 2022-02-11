@@ -13,14 +13,14 @@ import { getAuthRedirectUrl } from '../../Router';
 import { KYC_URL } from '../../constants/auth';
 
 const KYCPage: React.FC = () => {
-  const { user, loggedIn, loading } = useAuth();
+  const { user, loggedIn, loading, isKYCDone } = useAuth();
 
   const history = useHistory();
 
   // If the user is logged out, it redirects back to the login page
   useEffect(() => {
     if (!loading) {
-      const nextUrl = getAuthRedirectUrl(user);
+      const nextUrl = getAuthRedirectUrl(user, isKYCDone);
       if (nextUrl !== KYC_URL) {
         history.push(nextUrl, { replace: true });
       }

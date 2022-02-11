@@ -8,6 +8,8 @@ import {
 import Input from '@mui/material/Input';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { requestInstantKYCApproval, uploadFile, verifyDoc, verifySelfie } from '../../../api/kyc';
+import { HOME_URL } from '../../../constants/auth';
+import { useHistory } from 'react-router-dom';
 
 interface IKYCUploaderProps {
   uploadURLs: _uploadURLs;
@@ -52,10 +54,13 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
 
   const fileInputRef = useRef(null);
 
+  const history = useHistory();
+
   const requestKYCApproval = async (): Promise<IVerifyUploadedDocResponseData> => {
     setLoading(true);
     const data = await requestInstantKYCApproval();
     setLoading(false);
+    history.push(HOME_URL, { replace: true });
     return data;
   };
 
