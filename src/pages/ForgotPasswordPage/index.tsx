@@ -15,7 +15,12 @@ import { LOGIN_URL, RESET_PASSWORD_MODE } from '../../constants/auth';
 import useQuery from '../../hooks/useQuery';
 import { verifyEmail, verifyPassword } from '../../utils/auth';
 
-const ForgotPassword: React.FC<any> = () => {
+enum PASSWORD_RESET_STATE {
+  ENTER_EMAIL = 'ENTER_EMAIL',
+  RESET_PASSWORD_MODE = 'RESET_PASSWORD',
+}
+
+const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,19 +30,25 @@ const ForgotPassword: React.FC<any> = () => {
   const params = useQuery();
   const history = useHistory();
 
-  const [state, setState] = useState<'enterEmail' | 'resetPassword'>('enterEmail');
+  const [state, setState] = useState<PASSWORD_RESET_STATE>(PASSWORD_RESET_STATE.ENTER_EMAIL);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (email != '') {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (email) {
+      setLoading(true);
       sendPasswordResetLink(email)
-        .then((res) => setMessage('Reset Link has been sent to your email!'))
-        .catch((err) => setError('Something went wrong. Try again'));
+        .then(() => setMessage('Reset Link has been sent to your email!'))
+        .catch(() => setError('Something went wrong. Try again'))
+        .finally(() => setLoading(false));
     }
   };
 
-  const handleResetPassword = (e: any) => {
-    e.preventDefault();
+  const handleResetPassword = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
     setLoading(true);
     resetPassword(params.oobCode, password)
       .then((res) => console.log(res))
@@ -50,12 +61,12 @@ const ForgotPassword: React.FC<any> = () => {
 
   useEffect(() => {
     if (params.mode === RESET_PASSWORD_MODE && params.oobCode) {
-      setState('resetPassword');
+      setState(PASSWORD_RESET_STATE.RESET_PASSWORD_MODE);
     }
   }, []);
 
   const content =
-    state === 'enterEmail' ? (
+    state === PASSWORD_RESET_STATE.ENTER_EMAIL ? (
       <Box
         component="form"
         noValidate
@@ -102,7 +113,7 @@ const ForgotPassword: React.FC<any> = () => {
           </Grid>
         </Grid>
       </Box>
-    ) : state === 'resetPassword' ? (
+    ) : (
       <Box
         component="form"
         noValidate
@@ -164,7 +175,7 @@ const ForgotPassword: React.FC<any> = () => {
           {loading ? <CircularProgress /> : 'Reset Password'}
         </Button>
       </Box>
-    ) : null;
+    );
 
   return (
     <OnBoardingLayout>
@@ -181,7 +192,7 @@ const ForgotPassword: React.FC<any> = () => {
         }}
       >
         <Typography component="h1" variant="h3">
-          {state === 'enterEmail' ? 'Forgot Password?' : 'Reset Password'}
+          {state === PASSWORD_RESET_STATE.ENTER_EMAIL ? 'Forgot Password?' : 'Reset Password'}
         </Typography>
         {content}
       </Box>

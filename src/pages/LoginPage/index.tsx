@@ -6,7 +6,7 @@ import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLa
 import { login } from '../../api/auth';
 import { getAuthRedirectUrl } from '../../Router';
 import { useHistory, Link } from 'react-router-dom';
-import { FORGOT_PASSWORD_URL, SIGN_UP_URL } from '../../constants/auth';
+import { FORGOT_PASSWORD_URL, HOME_URL, SIGN_UP_URL } from '../../constants/auth';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,8 +26,7 @@ const LoginPage: React.FC = () => {
           if (nextUrl) {
             history.push(nextUrl);
           } else {
-            // TODO: update app urls with constants
-            history.push('/', { replace: true });
+            history.push(HOME_URL, { replace: true });
           }
         })
         .catch((err) => {

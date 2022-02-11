@@ -4,23 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { sendEmailVerificationCode, sendVerificationEmail, useAuth } from '../../api/auth';
 import OnBoardingLayout from '../../components/composite/onBoarding/OnBoardingLayout';
-import {
-  EMAIL_VERIFICATION_MODE,
-  KYC_URL,
-  LOGIN_URL,
-  VERIFY_EMAIL_URL,
-} from '../../constants/auth';
+import { EMAIL_VERIFICATION_MODE, KYC_URL, VERIFY_EMAIL_URL } from '../../constants/auth';
 import useQuery from '../../hooks/useQuery';
 import { getAuthRedirectUrl } from '../../Router';
-// import {
-//   sendEmailVerificationCode,
-//   sendVerificationEmail,
-//   useAuth,
-//   UserDetails,
-// } from '../../../../api/auth';
-// import { EMAIL_VERIFICATION_MODE } from '../../../../constants/auth';
-// import useQuery from '../../../../hooks/useQuery';
-// import { AuthStates } from '../../../../pages/AuthenticationPage';
 
 const VerifyEmailPage: React.FC = () => {
   const params = useQuery();
@@ -29,12 +15,15 @@ const VerifyEmailPage: React.FC = () => {
 
   // If the user is logged out, it redirects back to the login page
   useEffect(() => {
-    if (!loading && !user) {
-      history.push(LOGIN_URL, { replace: true });
-    } else if (user?.emailVerified) {
-      history.push(KYC_URL, { replace: true });
+    const redirectUrl = getAuthRedirectUrl(user);
+    if (
+      redirectUrl !== VERIFY_EMAIL_URL &&
+      history.location.pathname !== VERIFY_EMAIL_URL &&
+      !loading
+    ) {
+      history.push(redirectUrl, { replace: true });
     }
-  }, [loading, loggedIn]);
+  }, [loading, loggedIn, user]);
 
   const [emailVerificationLoading, setEmailVerificationLoading] = useState(false);
   const [error, setError] = useState('');

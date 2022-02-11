@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useAuth } from './api/auth';
-import { BrowserRouter, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { signOut, useAuth } from './api/auth';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Header from './components/composite/Navigation/Header';
 import { CircularProgress } from '@mui/material';
 import {
@@ -33,22 +33,21 @@ const onBoardingRoutes = [
 export const getAuthRedirectUrl = (user: any) => {
   const params = new URLSearchParams(window.location.search);
 
-  const oob = params.get('oobCode');
+  const oobCode = params.get('oobCode');
   const mode = params.get('mode');
 
-  if (mode === EMAIL_VERIFICATION_MODE) {
-    return VERIFY_EMAIL_URL + `?mode=${mode}&oobCode=${oob}`;
-  } else if (mode === RESET_PASSWORD_MODE) {
-    return FORGOT_PASSWORD_URL + `?mode=${mode}&oobCode=${oob}`;
+  if (mode === RESET_PASSWORD_MODE && oobCode) {
+    return FORGOT_PASSWORD_URL + `?mode=${mode}&oobCode=${oobCode}`;
   }
+
   if (!user) {
     return LOGIN_URL;
   }
-
-  if (!user.emailVerified) {
+  if (mode === EMAIL_VERIFICATION_MODE && oobCode) {
+    return VERIFY_EMAIL_URL + `?mode=${mode}&oobCode=${oobCode}`;
+  } else if (!user.emailVerified) {
     return VERIFY_EMAIL_URL;
-  }
-  if (!user.isKYCDone) {
+  } else if (!user.isKYCDone) {
     return KYC_URL;
   }
   return '';
@@ -61,10 +60,7 @@ const Router: React.FC = () => {
   //   background-color: ${theme.palette.primary.dark};
   // `;
 
-  const history = useHistory();
-
   useEffect(() => {
-    console.log(history);
     // signOut();
     // login('test1@test.com', 'Test@123');
     // signUp('test1@test.com', 'Test@123');
@@ -79,6 +75,7 @@ const Router: React.FC = () => {
   const showKYCPage = true;
 
   const showOnboarding = showAuthPage || showKYCPage;
+  console.log(getAuthRedirectUrl(user));
 
   return loading ? (
     <CircularProgress />
