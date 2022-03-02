@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { signOut, useAuth } from './api/auth';
+import React from 'react';
+import { useAuth } from './api/auth';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Header from './components/composite/Navigation/Header';
 import { CircularProgress } from '@mui/material';
@@ -12,6 +12,12 @@ import {
   SIGN_UP_URL,
   VERIFY_EMAIL_URL,
 } from './constants/auth';
+import {
+  HOME_URL,
+  USER_SETTINGS_URL,
+  PORTFOLIO_INVESTMENT_URL,
+  PORTFOLIO_URL,
+} from './constants/app';
 
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
@@ -20,6 +26,9 @@ const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage')
 const KYCPage = React.lazy(() => import('./pages/KYCPage'));
 
 const HomePage = React.lazy(() => import('./pages/HomePage'));
+const UserSettingsPage = React.lazy(() => import('./pages/UserSettingsPage'));
+const PortfolioInvestmentPage = React.lazy(() => import('./pages/PortfolioInvestmentPage'));
+const PortfolioPage = React.lazy(() => import('./pages/PortfolioPage'));
 
 const onBoardingRoutes = [
   { path: LOGIN_URL, component: LoginPage },
@@ -27,6 +36,13 @@ const onBoardingRoutes = [
   { path: VERIFY_EMAIL_URL, component: VerifyEmailPage },
   { path: FORGOT_PASSWORD_URL, component: ForgotPasswordPage },
   { path: KYC_URL, component: KYCPage },
+];
+
+const AppRoutes = [
+  { path: HOME_URL, component: HomePage },
+  { path: USER_SETTINGS_URL, component: UserSettingsPage },
+  { path: PORTFOLIO_INVESTMENT_URL, component: PortfolioInvestmentPage },
+  { path: PORTFOLIO_URL, component: PortfolioPage },
 ];
 
 // TODO: add user type
@@ -87,7 +103,10 @@ const Router: React.FC = () => {
           <>
             <Header />
             <Switch>
-              <Route exact path="/" component={HomePage} />
+              {AppRoutes.map((route) => (
+                <Route key={route.path} exact path={route.path} component={route.component} />
+              ))}
+              <Route path="*" render={() => <Redirect to={HOME_URL} />} />
             </Switch>
           </>
         )}

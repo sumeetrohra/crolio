@@ -8,7 +8,7 @@ import {
 import Input from '@mui/material/Input';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { requestInstantKYCApproval, uploadFile, verifyDoc, verifySelfie } from '../../../api/kyc';
-import { HOME_URL } from '../../../constants/auth';
+import { HOME_URL } from '../../../constants/app';
 import { useHistory } from 'react-router-dom';
 
 interface IKYCUploaderProps {
