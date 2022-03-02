@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   IVerifyUploadedDocResponseData,
   UploadedDocFace,
@@ -10,6 +10,7 @@ import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { requestInstantKYCApproval, uploadFile, verifyDoc, verifySelfie } from '../../../api/kyc';
 import { HOME_URL } from '../../../constants/app';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../../api/auth';
 
 interface IKYCUploaderProps {
   uploadURLs: _uploadURLs;
@@ -52,6 +53,19 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  const { kycStatus } = useAuth();
+
+  useEffect(() => {
+    if (kycStatus) {
+      if ((kycStatus as any).isPanCardVerified) {
+        selectCurrentDocument(DocumentType.SELFIE);
+      } else if ((kycStatus as any).isAadharBackVerified) {
+        selectCurrentDocument(DocumentType.PAN_CARD_FRONT);
+      } else if ((kycStatus as any).isAadharFrontVerified) {
+        selectCurrentDocument(DocumentType.AADHAR_CARD_BACK);
+      }
+    }
+  }, [kycStatus]);
   const fileInputRef = useRef(null);
 
   const history = useHistory();
@@ -99,13 +113,13 @@ const KYCDocsUploader: React.FC<IKYCUploaderProps> = (props) => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (fileInputRef.current as any).value = '';
+        setLoading(false);
         if (!verificationData.data.success) {
           setError('Could not verify uploaded image successfully, please try again');
         } else {
           nextFn();
           setFilesArr(null);
           setError('');
-          setLoading(false);
         }
       }
     }

@@ -30,7 +30,16 @@ const KYCPage: React.FC = () => {
   // TODO: Sumeet set user type
   const [userDetails, setUserDetails] = useState<any>();
   const [loadingNameUpload, setLoadingNameUpload] = useState(false);
-  const [uploadURLs, setUploadURLs] = useState<_uploadURLs>();
+  const [uploadURLs, setUploadURLs] = useState<_uploadURLs>({
+    documentBack:
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/621f8102f91f6f001cd1c24e/identity_back?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1646239351&Signature=rfGFzSXi5Q9vBMx%2Fw7LeMAcDT7w%3D',
+    documentFront:
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/621f8102f91f6f001cd1c24e/identity_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1646239351&Signature=oVFCs28uAucBp92WQumQEA3qZl0%3D',
+    panCard:
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/621f8102f91f6f001cd1c24e/identity_2_front?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1646239351&Signature=0dHfGjBi4jkAS8Gu0Ji%2BYy00Sfs%3D',
+    selfie:
+      'https://vauld-kyc-dev.s3.amazonaws.com/enterprise/621f8102f91f6f001cd1c24e/selfie?AWSAccessKeyId=AKIA6KLT5FIQEJ2LSMJT&Content-Type=image%2Fjpeg&Expires=1646239351&Signature=BRVVSC37t39tZB6AU6rdLNr0XYM%3D',
+  });
 
   const fetchUser = () =>
     getUserDetails(user?.uid).then((data) => {
@@ -43,7 +52,7 @@ const KYCPage: React.FC = () => {
 
   useEffect(() => {
     if (userDetails) {
-      initiateKYC().then((res) => setUploadURLs(res.data.data));
+      // initiateKYC().then((res) => setUploadURLs(res.data.data));
     }
   }, [userDetails]);
 

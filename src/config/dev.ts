@@ -9,4 +9,5 @@ export const devAppConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_DEV_MEASUREMENT_ID,
   },
   emulatorUrl: process.env.REACT_APP_FIREBASE_DEV_EMULATOR_URL as string,
+  backendUrl: process.env.REACT_APP_BACKEND_BASE_URL,
 };

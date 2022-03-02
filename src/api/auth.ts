@@ -14,6 +14,7 @@ import {
   ParsedToken,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { getUserDetails } from './user';
 // import { devAppConfig } from '../config/dev';
 // import { ENVIRONMENT_DEV } from '../constants/env';
 
@@ -43,6 +44,7 @@ export const useAuth = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState<UserDetails | null>(null);
   const [isKYCDone, setIsKYCDone] = useState<boolean>(false);
+  const [kycStatus, setKycStatus] = useState();
 
   useEffect(() => {
     const _auth = getAuth();
@@ -51,8 +53,11 @@ export const useAuth = () => {
       if (user) {
         setLoggedIn(true);
         setUser(user);
-        const claims = await getCustomClaims();
-        setIsKYCDone((claims as unknown as ParsedToken).isKYCDone as unknown as boolean);
+        const userData = await getUserDetails(user.uid);
+        if (userData) {
+          setKycStatus(userData.data.kycStatus);
+          setIsKYCDone(userData.data.kycStatus.isKYCDone);
+        }
       } else {
         setLoggedIn(false);
         setUser(null);
@@ -61,7 +66,9 @@ export const useAuth = () => {
     });
   }, []);
 
-  return { loading, loggedIn, user, isKYCDone };
+  useEffect(() => {}, []);
+
+  return { loading, loggedIn, user, isKYCDone, kycStatus };
 };
 
 export const sendVerificationEmail = (user: UserDetails): Promise<void> => {
