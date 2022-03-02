@@ -9,22 +9,20 @@ import {
 
 // import { ENVIRONMENT_DEV } from '../constants/env';
 import axios from 'axios';
+import { getAPIClient } from './ApiClient';
 
 // const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
 
-export const createUserKYCDetails = (data: ICreateUserAccountRequestData) => {
-  const functions = getFunctions();
-  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
-  const createUserAccount = httpsCallable(functions, 'createUserAccount');
-  // TODO: this is incorrect interface correct it
-  return createUserAccount(data) as unknown as Promise<ICreateUserAccountRequestData>;
+export const createUserKYCDetails = async (payload: ICreateUserAccountRequestData) => {
+  const server = await getAPIClient();
+  const data = await server.post('/users', payload);
+  return data.data;
 };
 
 export const initiateKYC = async (): Promise<IInitiateKYCResponseData> => {
-  const functions = getFunctions();
-  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
-  const initiateKYCFunction = httpsCallable(functions, 'initiateKYC');
-  return initiateKYCFunction() as unknown as Promise<IInitiateKYCResponseData>;
+  const server = await getAPIClient();
+  const data = await server.get('/kyc/initiateKYC');
+  return data;
 };
 
 export const uploadFile = async (url: string, file: File): Promise<any> => {
@@ -38,22 +36,20 @@ export const uploadFile = async (url: string, file: File): Promise<any> => {
 export const verifyDoc = async (
   payload: IVerifyUploadedDocRequestData,
 ): Promise<IVerifyUploadedDocResponseData> => {
-  const functions = getFunctions();
-  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
-  const verifyUploadedKYCDoc = httpsCallable(functions, 'verifyUploadedKYCDoc');
-  return verifyUploadedKYCDoc(payload) as unknown as Promise<IVerifyUploadedDocResponseData>;
+  const server = await getAPIClient();
+  const data = await server.post('/kyc/verify_doc', payload);
+  return data;
 };
 
 export const verifySelfie = async (): Promise<IVerifyUploadedDocResponseData> => {
-  const functions = getFunctions();
-  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
-  const verifyUploadedKYCSelfie = httpsCallable(functions, 'verifyUploadedKYCSelfie');
-  return verifyUploadedKYCSelfie() as unknown as Promise<IVerifyUploadedDocResponseData>;
+  const server = await getAPIClient();
+  const data = await server.post('/kyc/verify_selfie');
+  return data;
 };
 
-export const requestInstantKYCApproval = (): Promise<IRequestInstantKYCApprovalResponseData> => {
-  const functions = getFunctions();
-  // isDev && connectFunctionsEmulator(functions, 'localhost', 5001);
-  const requestKYCApproval = httpsCallable(functions, 'requestKYCApproval');
-  return requestKYCApproval() as unknown as Promise<IRequestInstantKYCApprovalResponseData>;
-};
+export const requestInstantKYCApproval =
+  async (): Promise<IRequestInstantKYCApprovalResponseData> => {
+    const server = await getAPIClient();
+    const data = await server.post('/kyc/request_kyc_approval');
+    return data;
+  };
