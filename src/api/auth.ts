@@ -3,22 +3,15 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut as logout,
-  // connectAuthEmulator,
   User,
   onAuthStateChanged,
   sendEmailVerification,
   applyActionCode,
   sendPasswordResetEmail,
   confirmPasswordReset,
-  IdTokenResult,
-  ParsedToken,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { getUserDetails } from './user';
-// import { devAppConfig } from '../config/dev';
-// import { ENVIRONMENT_DEV } from '../constants/env';
-
-// const isDev = process.env.REACT_APP_ENV === ENVIRONMENT_DEV;
 
 export type UserDetails = User;
 
@@ -82,18 +75,10 @@ export const sendEmailVerificationCode = (code: string): Promise<void> => {
 
 export const sendPasswordResetLink = (email: string): Promise<void> => {
   const auth = getAuth();
-
   return sendPasswordResetEmail(auth, email);
 };
 
 export const resetPassword = (oobCode: string, newPassword: string): Promise<void> => {
   const auth = getAuth();
-
   return confirmPasswordReset(auth, oobCode, newPassword);
-};
-
-export const getCustomClaims = (): Promise<IdTokenResult | ParsedToken> | undefined => {
-  const auth = getAuth();
-
-  return auth.currentUser?.getIdTokenResult(true).then((res) => res.claims);
 };
