@@ -5,11 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { getInvestments } from '../../api/investments';
 import { getAllPortfolios } from '../../api/portfolio';
 
-// TODO: Investment details and portfolio search lies here
 const HomePage: React.FC = () => {
   const [availablePortfolios, setAvailablePortfolios] = useState<any[]>();
   const [investmentDetails, setInvestmentDetails] = useState<any>();
-  console.log(investmentDetails);
 
   useEffect(() => {
     getAllPortfolios().then((data) => setAvailablePortfolios(data.data.portfolios));
@@ -22,7 +20,7 @@ const HomePage: React.FC = () => {
   const history = useHistory();
 
   return (
-    <Container>
+    <Container style={{ marginBottom: '16px' }}>
       {investmentDetails &&
         investmentDetails.investments &&
         Array.isArray(investmentDetails.investments) &&

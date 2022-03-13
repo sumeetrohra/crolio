@@ -37,13 +37,12 @@ const PortfolioPage: React.FC = () => {
   const handleInvest = () => {
     console.log(investmentAmount);
     setLoadingInvest(true);
-    // TODO: Invest more
-    portfolioDetails.hasInvested
-      ? null
-      : investMoney({ portfolioId: portfolioDetails._id, amount: investmentAmount }).finally(() => {
-          setLoadingInvest(false);
-          history.push('/');
-        });
+    investMoney({ portfolioId: portfolioDetails._id, amount: investmentAmount })
+      .then((data) => console.log(data.data))
+      .finally(() => {
+        setLoadingInvest(false);
+        history.push('/');
+      });
   };
 
   return (
